@@ -2,7 +2,7 @@
 Contains our frame synchronization SM
 """
 
-from numpy import mean, argmax, genfromtxt
+from numpy import mean, argmax, genfromtxt, array, append
 from enum import Enum
 from buffer import FS_buffer
 from params import *
@@ -16,29 +16,32 @@ st = Enum(
 
 
 class FSSM:
-    def __init__(self, corr="L0"):
+    def __init__(self, corr="L0_modified"):
         self.state = st.init
         self.data = FS_buffer(capacity=buffer_size)
+        self.corr_data = self.data.get_data()[-256:]
         self.current_idx = -1
         self.last_mhat = None
         self.llast_mhat = None
         self.weird = None
-        if corr == "L0":
-            self.corr = L0
+        if corr == "L0_modified":
+            self.corr = L0_modified
         elif corr == "L6":
             self.corr = L6
         else:
             print("Unsupported correlation function")
 
     def get_peak(self):
-        correlations = self.corr(self.data.get_data())
-        avg_val = mean(correlations)
-        max_idx = argmax(correlations)
-        max_val = correlations[max_idx]
+        self.correlations = append(self.correlations, (self.corr(self.corr_data)))
+        self.correlations = self.correlations[1:]
+        avg_val = mean(self.correlations)
+        max_idx = argmax(self.correlations)
+        max_val = self.correlations[max_idx]
         return avg_val, max_idx, max_val
 
     def tick(self, newSample):
         self.data.insert(newSample)
+        self.corr_data = self.data.get_data()[-256:]
         self.current_idx += 1
 
         # State update first
@@ -47,10 +50,12 @@ class FSSM:
                 self.state = st.init
             else:
                 self.state = st.coldStart
+                self.correlations = array(L0(self.data.get_data()))
+                self.corr_data = self.data.get_data()[-256:]
         elif self.state == st.coldStart:
             avg_val, max_idx, max_val = self.get_peak()
             tmp_idx = self.current_idx - buffer_size + max_idx
-            if max_val > 3 * avg_val:                              
+            if max_val > 2 * avg_val:                              
                 self.state = st.onePeak
                 self.last_mhat = tmp_idx
             else:
@@ -149,11 +154,11 @@ class FSSM:
 def plot_window(sm, samples, peak, num_plots=2):
 
     # plot the surrounding pointd of the peak (256 samples on either side)
-    possible_preamble = L0_temp(samples[peak-256:peak+512])
+    #possible_preamble = L0_temp(samples[peak-256:peak+512])
     x = range(512)
     x = x + peak - 256
-    max_y = max(possible_preamble)
-    max_x = argmax(possible_preamble) + peak - 257
+    max_y = max(samples)
+    max_x = argmax(samples) + peak - 257
 
     # plot the window of correlated data the state machine is seeing
     window = L0(sm.data.get_data())
@@ -164,7 +169,7 @@ def plot_window(sm, samples, peak, num_plots=2):
     # actually do the plotting
     fig = figure(figsize=(12,9), dpi=80)
     axs = fig.subplots(num_plots,1)
-    axs[0].plot(x, possible_preamble[:512])
+    axs[0].plot(x, samples[:512])
     axs[0].text(max_x-64, max_y + 500, "max = (" + str(max_x) + "," + str(max_y) + ")")
     axs[0].grid(True)
     if num_plots > 1:
@@ -205,13 +210,13 @@ def main():
         if sm.last_mhat != last_mhat:
             last_mhat = sm.last_mhat
             print(f"last_mhat: {last_mhat}")
-            plot_window(sm, samples, last_mhat)
+            plot_window(sm, sm.correlations, last_mhat)
 
         if sm.weird != weird:
             weird = sm.weird
             if weird is not None:
                 print(f"weird: {weird}")
-                plot_window(sm, samples, weird)
+                plot_window(sm, sm.correlations, weird)
 
                 
 

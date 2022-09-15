@@ -19,5 +19,10 @@ def L0_temp(data):
         result[m] = abs(dot(data[m : m + 256], preamble_template))
     return result
 
+# A version of L0 that only return one correlated sample at a time
+def L0_modified(data):
+    result = abs(dot(data[0 :256], preamble_template))
+    return result
+
 def L6(data):
     pass
