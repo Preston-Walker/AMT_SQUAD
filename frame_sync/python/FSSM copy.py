@@ -19,7 +19,7 @@ class FSSM:
     def __init__(self, corr="L0_modified"):
         self.state = st.init
         self.data = FS_buffer(capacity=buffer_size)
-        self.corr_data = self.data.get_data()[-256:]
+        self.corr_data = array(self.data.get_data()[-256:])
         self.current_idx = -1
         self.last_mhat = None
         self.llast_mhat = None
@@ -41,7 +41,8 @@ class FSSM:
 
     def tick(self, newSample):
         self.data.insert(newSample)
-        self.corr_data = self.data.get_data()[-256:]
+        self.corr_data = append(self.corr_data, newSample)
+        self.corr_data = self.corr_data[1:]
         self.current_idx += 1
 
         # State update first
