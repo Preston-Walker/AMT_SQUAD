@@ -20,7 +20,7 @@ def L0_temp(data):
     return result
 
 # A version of L0 that only return one correlated sample at a time
-def L0_modified(data):
+def L0_single(data):
     result = abs(dot(data[0 :256], preamble_template))
     return result
 
