@@ -4,7 +4,7 @@ Contains our frame synchronization SM
 
 from numpy import mean, argmax, genfromtxt, array, append
 from enum import Enum
-from buffer import FS_buffer
+#from buffer import FS_buffer
 from params import *
 from FS_functions import *
 from matplotlib.pyplot import plot, text, grid, show, subplot, figure, subplots
@@ -18,12 +18,12 @@ st = Enum(
 class FSSM:
     def __init__(self, corr="L0_single"):
         self.state = st.init
-        self.data = FS_buffer(capacity=buffer_size)
-        self.corr_data = array(self.data.get_data()[-256:])
+        self.corr_data = zeros(256)
         self.current_idx = -1
         self.last_mhat = None
         self.llast_mhat = None
         self.weird = None
+        self.correlations = array([])
         if corr == "L0_single":
             self.corr = L0_single
         elif corr == "L6":
@@ -37,22 +37,22 @@ class FSSM:
         avg_val = mean(self.correlations)
         max_idx = argmax(self.correlations)
         max_val = self.correlations[max_idx]
+        #print(argmax(self.correlations)+self.current_idx-buffer_size)
         return avg_val, max_idx, max_val
 
     def tick(self, newSample):
-        self.data.insert(newSample)
         self.corr_data = append(self.corr_data, newSample)
         self.corr_data = self.corr_data[1:]
         self.current_idx += 1
 
         # State update first
         if self.state == st.init:
-            if self.data.size < self.data.capacity - 1:
+            if self.correlations.size < buffer_size-256:
                 self.state = st.init
+                self.correlations = append(self.correlations, (self.corr(self.corr_data)))
             else:
                 self.state = st.coldStart
-                self.correlations = array(L0(self.data.get_data()))
-                self.corr_data = self.data.get_data()[-256:]
+                self.correlations = append(self.correlations, (self.corr(self.corr_data)))
         elif self.state == st.coldStart:
             avg_val, max_idx, max_val = self.get_peak()
             tmp_idx = self.current_idx - buffer_size + max_idx
@@ -81,6 +81,9 @@ class FSSM:
             elif abs(tmp_idx - (self.last_mhat + frame_size)) <= 1:
                 self.state = st.locked
                 self.llast_mhat = self.last_mhat
+                self.last_mhat = tmp_idx
+            elif abs(tmp_idx - (self.llast_mhat + frame_size)) <= 1:
+                self.state = st.twoPeaks
                 self.last_mhat = tmp_idx
             else:
                 self.state = st.weird
@@ -112,6 +115,9 @@ class FSSM:
             elif abs(tmp_idx - (self.last_mhat + frame_size)) <= 1:
                 self.state = st.locked
                 self.llast_mhat = self.last_mhat
+                self.last_mhat = tmp_idx
+            elif abs(tmp_idx - (self.llast_mhat + frame_size)) <= 1:
+                self.state = st.locked
                 self.last_mhat = tmp_idx
             else:
                 self.state = st.oneMissed
@@ -155,12 +161,12 @@ class FSSM:
 def plot_window(sm, samples, peak, num_plots=2):
 
     # plot the surrounding pointd of the peak (256 samples on either side)
-    data_to_correlate = samples[peak-256:peak+512]
-    possible_preamble = zeros(512)
+    data_to_correlate = samples[peak-256:peak+513]
+    possible_preamble = zeros(513)
     x = range(512)
     for index in x:
         possible_preamble[index] = L0_single(data_to_correlate[index:index+256])
-    x = x + peak - 256
+    x = x + peak - 257
     max_y = max(possible_preamble)
     max_x = argmax(possible_preamble) + peak - 257
 

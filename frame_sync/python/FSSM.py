@@ -35,6 +35,8 @@ class FSSM:
         avg_val = mean(correlations)
         max_idx = argmax(correlations)
         max_val = correlations[max_idx]
+        #if(self.state != st.coldStart):
+        #    print(argmax(self.data)+self.last_mhat)
         return avg_val, max_idx, max_val
 
     def tick(self, newSample):
@@ -106,6 +108,9 @@ class FSSM:
             elif abs(tmp_idx - (self.last_mhat + frame_size)) <= 1:
                 self.state = st.locked
                 self.llast_mhat = self.last_mhat
+                self.last_mhat = tmp_idx
+            elif abs(tmp_idx - (self.llast_mhat + frame_size)) <= 1:
+                self.state = st.locked
                 self.last_mhat = tmp_idx
             else:
                 self.state = st.oneMissed
