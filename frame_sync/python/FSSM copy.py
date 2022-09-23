@@ -22,8 +22,10 @@ class FSSM:
         self.current_idx = -1
         self.last_mhat = None
         self.llast_mhat = None
+        self.mhats = array([])
         self.weird = None
         self.correlations = array([])
+        self.all_correlated_samples = array([])
         if corr == "L0_single":
             self.corr = L0_single
         elif corr == "L6":
@@ -43,6 +45,7 @@ class FSSM:
     def tick(self, newSample):
         self.corr_data = append(self.corr_data, newSample)
         self.corr_data = self.corr_data[1:]
+        self.all_correlated_samples = append(self.all_correlated_samples, (self.corr(self.corr_data)))
         self.current_idx += 1
 
         # State update first
@@ -59,6 +62,7 @@ class FSSM:
             if max_val > 3 * avg_val:                              
                 self.state = st.onePeak
                 self.last_mhat = tmp_idx
+                self.mhats = append(self.mhats, self.last_mhat)
             else:
                 self.state = st.coldStart
         elif self.state == st.onePeak:
@@ -70,6 +74,7 @@ class FSSM:
                 self.state = st.twoPeaks
                 self.llast_mhat = self.last_mhat
                 self.last_mhat = tmp_idx
+                self.mhats = append(self.mhats, self.last_mhat)
             else:
                 self.state = st.weird                                       
                 self.weird = self.current_idx - buffer_size + max_idx
@@ -82,9 +87,11 @@ class FSSM:
                 self.state = st.locked
                 self.llast_mhat = self.last_mhat
                 self.last_mhat = tmp_idx
+                self.mhats = append(self.mhats, self.last_mhat)
             elif abs(tmp_idx - (self.llast_mhat + frame_size)) <= 1:
                 self.state = st.twoPeaks
                 self.last_mhat = tmp_idx
+                self.mhats = append(self.mhats, self.last_mhat)
             else:
                 self.state = st.weird
                 self.weird = tmp_idx
@@ -98,13 +105,16 @@ class FSSM:
                     self.state = st.twoPeaks if not self.llast_mhat else st.locked
                     self.llast_mhat = self.last_mhat
                     self.last_mhat = tmp_idx
+                    self.mhats = append(self.mhats, self.last_mhat)
                 elif abs(tmp_idx - (self.weird + frame_size)) <= 1:
                     self.state = st.twoPeaks
                     self.llast_mhat = self.weird
                     self.last_mhat = tmp_idx
+                    self.mhats = append(self.mhats, self.last_mhat)
                 else:
                     self.state = st.onePeak
                     self.last_mhat = tmp_idx
+                    self.mhats = append(self.mhats, self.last_mhat)
                     self.llast_mhat = None
                 self.weird = None
         elif self.state == st.locked:
@@ -116,9 +126,11 @@ class FSSM:
                 self.state = st.locked
                 self.llast_mhat = self.last_mhat
                 self.last_mhat = tmp_idx
+                self.mhats = append(self.mhats, self.last_mhat)
             elif abs(tmp_idx - (self.llast_mhat + frame_size)) <= 1:
                 self.state = st.locked
                 self.last_mhat = tmp_idx
+                self.mhats = append(self.mhats, self.last_mhat)
             else:
                 self.state = st.oneMissed
                 self.weird = tmp_idx
@@ -132,6 +144,7 @@ class FSSM:
                     self.state = st.locked
                     self.llast_mhat = self.last_mhat
                     self.last_mhat = tmp_idx
+                    self.mhats = append(self.mhats, self.last_mhat)
                     self.weird = None
                 else:
                     self.state = st.twoMissed
@@ -149,16 +162,18 @@ class FSSM:
                     self.state = st.locked
                     self.llast_mhat = self.last_mhat
                     self.last_mhat = tmp_idx
+                    self.mhats = append(self.mhats, self.last_mhat)
                     self.weird = None
                 else:
                     self.state = st.onePeak
                     self.last_mhat = tmp_idx
+                    self.mhats = append(self.mhats, self.last_mhat)
                     self.llast_mhat = None
                     self.weird = None
         else:
             print("Error state")
 
-def plot_window(sm, samples, peak, num_plots=2):
+def plot_window(sm, samples, peak, num_plots=3):
 
     # plot the surrounding pointd of the peak (256 samples on either side)
     data_to_correlate = samples[peak-256:peak+513]
@@ -188,8 +203,19 @@ def plot_window(sm, samples, peak, num_plots=2):
         axs[1].axvspan(winMax_x-256, winMax_x+256, color='red', alpha=0.5)
         axs[1].grid(True)
         if num_plots > 2:
-            axs[2].plot(win_x[argmax(window)-256:argmax(window)+256], window[argmax(window)-256:argmax(window)+256])
+            complete_idx = range(-256,sm.current_idx-255)
+            axs[2].plot(complete_idx, sm.all_correlated_samples)
             axs[2].grid(True)
+            for num in complete_idx:
+                if num % 6656 == 4504:
+                    is_mhat = False
+                    for mhat in sm.mhats:
+                        if (abs(mhat - num) <= 2):
+                            is_mhat = True
+                    if is_mhat:
+                        axs[2].axvspan(num-256, num+256, color='green', alpha=0.3)
+                    else:
+                        axs[2].axvspan(num-256, num+256, color='red', alpha=0.3)
     show()  
 
 def main():
