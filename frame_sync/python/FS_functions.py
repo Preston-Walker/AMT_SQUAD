@@ -2,7 +2,7 @@
 Contains L0 to L6q from Rice-McMurdie
 """
 
-from numpy import dot, zeros
+from numpy import dot, zeros, power
 from params import *
 
 
@@ -24,5 +24,6 @@ def L0_single(data):
     result = abs(dot(data[0 : 256], preamble_template))
     return result
 
-def L6(data):
-    pass
+def L6_single(data):
+    result = power(abs(dot(data[0 : 128], preamble_template[0 : 128])),2) + power(abs(dot(data[128 : 256], preamble_template[128 : 256])),2)
+    return result

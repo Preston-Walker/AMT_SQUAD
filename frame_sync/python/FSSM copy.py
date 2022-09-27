@@ -2,7 +2,7 @@
 Contains our frame synchronization SM
 """
 
-from numpy import mean, argmax, genfromtxt, array, append
+from numpy import mean, argmax, genfromtxt, array, append, dtype, empty, shape, prod
 from enum import Enum
 #from buffer import FS_buffer
 from params import *
@@ -16,7 +16,7 @@ st = Enum(
 
 
 class FSSM:
-    def __init__(self, corr="L0_single"):
+    def __init__(self, corr="L6_single"):
         self.state = st.init
         self.corr_data = zeros(256)
         self.current_idx = -1
@@ -24,12 +24,17 @@ class FSSM:
         self.llast_mhat = None
         self.mhats = array([])
         self.weird = None
+        self.last_weird = None
         self.correlations = array([])
         self.all_correlated_samples = array([])
+        self.window_locked = array([])
+        self.lock_pairs = array([[]])
+        self.lock_begin = None
+        self.lock_end = None
         if corr == "L0_single":
             self.corr = L0_single
-        elif corr == "L6":
-            self.corr = L6
+        elif corr == "L6_single":
+            self.corr = L6_single
         else:
             print("Unsupported correlation function")
 
@@ -75,6 +80,12 @@ class FSSM:
                 self.llast_mhat = self.last_mhat
                 self.last_mhat = tmp_idx
                 self.mhats = append(self.mhats, self.last_mhat)
+            elif abs(tmp_idx - (self.last_weird + frame_size)) <= 1:
+                self.state = st.twoPeaks
+                self.llast_mhat = self.last_weird
+                self.last_mhat = tmp_idx
+                self.mhats = append(self.mhats, self.last_mhat)
+                self.mhats = append(self.mhats, self.llast_mhat)
             else:
                 self.state = st.weird                                       
                 self.weird = self.current_idx - buffer_size + max_idx
@@ -86,8 +97,10 @@ class FSSM:
             elif abs(tmp_idx - (self.last_mhat + frame_size)) <= 1:
                 self.state = st.locked
                 self.llast_mhat = self.last_mhat
+                self.last_weird = None
                 self.last_mhat = tmp_idx
                 self.mhats = append(self.mhats, self.last_mhat)
+                self.lock_begin = self.current_idx
             elif abs(tmp_idx - (self.llast_mhat + frame_size)) <= 1:
                 self.state = st.twoPeaks
                 self.last_mhat = tmp_idx
@@ -113,6 +126,7 @@ class FSSM:
                     self.mhats = append(self.mhats, self.last_mhat)
                 else:
                     self.state = st.onePeak
+                    self.last_weird = self.weird
                     self.last_mhat = tmp_idx
                     self.mhats = append(self.mhats, self.last_mhat)
                     self.llast_mhat = None
@@ -120,6 +134,7 @@ class FSSM:
         elif self.state == st.locked:
             avg_val, max_idx, max_val = self.get_peak()
             tmp_idx = self.current_idx - buffer_size + max_idx
+            self.window_locked = append(self.window_locked, self.current_idx)
             if tmp_idx == self.last_mhat:
                 self.state = st.locked
             elif abs(tmp_idx - (self.last_mhat + frame_size)) <= 1:
@@ -143,6 +158,7 @@ class FSSM:
                 if abs(tmp_idx - (self.last_mhat + frame_size)) <= 1:
                     self.state = st.locked
                     self.llast_mhat = self.last_mhat
+                    self.last_weird = None
                     self.last_mhat = tmp_idx
                     self.mhats = append(self.mhats, self.last_mhat)
                     self.weird = None
@@ -161,15 +177,20 @@ class FSSM:
                 ):
                     self.state = st.locked
                     self.llast_mhat = self.last_mhat
+                    self.last_weird = None
                     self.last_mhat = tmp_idx
                     self.mhats = append(self.mhats, self.last_mhat)
                     self.weird = None
                 else:
                     self.state = st.onePeak
+                    self.last_weird = self.last_mhat
                     self.last_mhat = tmp_idx
                     self.mhats = append(self.mhats, self.last_mhat)
                     self.llast_mhat = None
                     self.weird = None
+                    self.lock_end = self.current_idx
+                    lock_pair = array([self.lock_begin,self.lock_end])
+                    self.lock_pairs = append(self.lock_pairs, lock_pair)
         else:
             print("Error state")
 
@@ -206,6 +227,9 @@ def plot_window(sm, samples, peak, num_plots=3):
             complete_idx = range(-256,sm.current_idx-255)
             axs[2].plot(complete_idx, sm.all_correlated_samples)
             axs[2].grid(True)
+            # if prod(sm.lock_pairs.shape) > 0:
+            #     for i in range(shape(sm.lock_pairs)[0]):
+            #         axs[2].axvspan(sm.lock_pairs[i][0], sm.lock_pairs[i][1], color='yellow', alpha=.2)
             for num in complete_idx:
                 if num % 6656 == 4504:
                     is_mhat = False
@@ -213,9 +237,10 @@ def plot_window(sm, samples, peak, num_plots=3):
                         if (abs(mhat - num) <= 2):
                             is_mhat = True
                     if is_mhat:
-                        axs[2].axvspan(num-256, num+256, color='green', alpha=0.3)
+                        axs[2].axvspan(num-256, num+256, color='green', alpha=0.4)
                     else:
-                        axs[2].axvspan(num-256, num+256, color='red', alpha=0.3)
+                        axs[2].axvspan(num-256, num+256, color='red', alpha=0.4)
+                    
     show()  
 
 def main():
