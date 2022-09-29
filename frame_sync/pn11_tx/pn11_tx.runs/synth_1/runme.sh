@@ -20,7 +20,7 @@ else
 fi
 export LD_LIBRARY_PATH
 
-HD_PWD='/home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.runs/synth_1'
+HD_PWD='/home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.runs/synth_1'
 cd "$HD_PWD"
 
 HD_LOG=runme.log

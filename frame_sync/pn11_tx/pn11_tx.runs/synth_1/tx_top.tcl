@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "/home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.runs/synth_1/tx_top.tcl"
+  variable script "/home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.runs/synth_1/tx_top.tcl"
   variable category "vivado_synth"
 }
 
@@ -90,25 +90,25 @@ set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
 set_msg_config -source 4 -id {IP_Flow 19-2162} -severity warning -new_severity info
-set_property webtalk.parent_dir /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.cache/wt [current_project]
-set_property parent.project_path /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.xpr [current_project]
+set_property webtalk.parent_dir /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.cache/wt [current_project]
+set_property parent.project_path /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.xpr [current_project]
 set_property XPM_LIBRARIES XPM_CDC [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language Verilog [current_project]
-set_property ip_output_repo /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.cache/ip [current_project]
+set_property ip_output_repo /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
 read_verilog -library xil_defaultlib -sv {
-  /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.srcs/sources_1/new/GenerateOutput.sv
-  /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.srcs/sources_1/new/PN11.sv
-  /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.srcs/sources_1/new/Preamble.sv
-  /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.srcs/sources_1/new/tx_top.sv
+  /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.srcs/sources_1/new/BestPreamble.sv
+  /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.srcs/sources_1/new/GenerateOutput.sv
+  /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.srcs/sources_1/new/PN11.sv
+  /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.srcs/sources_1/new/tx_top.sv
 }
-read_ip -quiet /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.srcs/sources_1/ip/clk_wiz_1/clk_wiz_1.xci
-set_property used_in_implementation false [get_files -all /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.gen/sources_1/ip/clk_wiz_1/clk_wiz_1_board.xdc]
-set_property used_in_implementation false [get_files -all /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.gen/sources_1/ip/clk_wiz_1/clk_wiz_1.xdc]
-set_property used_in_implementation false [get_files -all /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.gen/sources_1/ip/clk_wiz_1/clk_wiz_1_ooc.xdc]
+read_ip -quiet /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.srcs/sources_1/ip/clk_wiz_1/clk_wiz_1.xci
+set_property used_in_implementation false [get_files -all /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.gen/sources_1/ip/clk_wiz_1/clk_wiz_1_board.xdc]
+set_property used_in_implementation false [get_files -all /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.gen/sources_1/ip/clk_wiz_1/clk_wiz_1.xdc]
+set_property used_in_implementation false [get_files -all /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.gen/sources_1/ip/clk_wiz_1/clk_wiz_1_ooc.xdc]
 
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
@@ -119,8 +119,8 @@ OPTRACE "Adding files" END { }
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.ip_user_files/constraints.xdc
-set_property used_in_implementation false [get_files /home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.ip_user_files/constraints.xdc]
+read_xdc /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.ip_user_files/constraints.xdc
+set_property used_in_implementation false [get_files /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.ip_user_files/constraints.xdc]
 
 set_param ips.enableIPCacheLiteLoad 1
 

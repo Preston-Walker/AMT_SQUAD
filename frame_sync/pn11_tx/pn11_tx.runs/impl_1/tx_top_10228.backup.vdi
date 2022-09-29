@@ -1,13 +1,15 @@
-
-*** Running vivado
-    with args -log tx_top.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source tx_top.tcl -notrace
-
-
-****** Vivado v2022.1 (64-bit)
-  **** SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
-  **** IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
-    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
-
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Thu Sep 29 11:49:45 2022
+# Process ID: 10228
+# Current directory: /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.runs/impl_1
+# Command line: vivado -log tx_top.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source tx_top.tcl -notrace
+# Log file: /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.runs/impl_1/tx_top.vdi
+# Journal file: /home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.runs/impl_1/vivado.jou
+# Running On: CB428-EE10977, OS: Linux, CPU Frequency: 3059.096 MHz, CPU Physical cores: 4, Host memory: 8209 MB
+#-----------------------------------------------------------
 source tx_top.tcl -notrace
 Command: link_design -top tx_top -part xc7a35tcpg236-1
 Design is defaulting to srcset: sources_1
@@ -59,7 +61,6 @@ Starting Logic Optimization Task
 
 Phase 1 Retarget
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-In IDDR TRANSFORM
 INFO: [Opt 31-49] Retargeted 0 cell(s).
 Phase 1 Retarget | Checksum: 21effe265
 
@@ -597,71 +598,3 @@ INFO: [runtcl-4] Executing : report_bus_skew -warn_on_violation -file tx_top_bus
 INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
 INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
 INFO: [Common 17-206] Exiting Vivado at Thu Sep 29 11:50:38 2022...
-
-*** Running vivado
-    with args -log tx_top.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source tx_top.tcl -notrace
-
-
-****** Vivado v2022.1 (64-bit)
-  **** SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
-  **** IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
-    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
-
-source tx_top.tcl -notrace
-Command: open_checkpoint tx_top_routed.dcp
-INFO: [Device 21-403] Loading part xc7a35tcpg236-1
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2907.047 ; gain = 0.000 ; free physical = 1364 ; free virtual = 5850
-INFO: [Netlist 29-17] Analyzing 5 Unisim elements for replacement
-INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
-INFO: [Project 1-479] Netlist was created with Vivado 2022.1
-INFO: [Project 1-570] Preparing netlist for logic optimization
-INFO: [Timing 38-478] Restoring timing data from binary archive.
-INFO: [Timing 38-479] Binary timing data restore complete.
-INFO: [Project 1-856] Restoring constraints from binary archive.
-INFO: [Project 1-853] Binary constraint restore complete.
-Reading XDEF placement.
-Reading placer database...
-Reading XDEF routing.
-Read XDEF Files: Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.06 . Memory (MB): peak = 2971.078 ; gain = 0.000 ; free physical = 850 ; free virtual = 5337
-Restored from archive | CPU: 0.070000 secs | Memory: 1.251678 MB |
-Finished XDEF File Restore: Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.06 . Memory (MB): peak = 2971.078 ; gain = 0.000 ; free physical = 850 ; free virtual = 5337
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2971.078 ; gain = 0.000 ; free physical = 850 ; free virtual = 5337
-INFO: [Project 1-111] Unisim Transformation Summary:
-No Unisim elements were transformed.
-
-INFO: [Project 1-604] Checkpoint was created with Vivado v2022.1 (64-bit) build 3526262
-open_checkpoint: Time (s): cpu = 00:00:14 ; elapsed = 00:00:14 . Memory (MB): peak = 2971.078 ; gain = 72.961 ; free physical = 850 ; free virtual = 5337
-Command: write_bitstream -force tx_top.bit
-Attempting to get a license for feature 'Implementation' and/or device 'xc7a35t'
-INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc7a35t'
-Running DRC as a precondition to command write_bitstream
-INFO: [IP_Flow 19-234] Refreshing IP repositories
-INFO: [IP_Flow 19-1704] No user IP repositories specified
-INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/Vivado/2022.1/data/ip'.
-INFO: [DRC 23-27] Running DRC with 8 threads
-WARNING: [DRC CFGBVS-1] Missing CFGBVS and CONFIG_VOLTAGE Design Properties: Neither the CFGBVS nor CONFIG_VOLTAGE voltage property is set in the current_design.  Configuration bank voltage select (CFGBVS) must be set to VCCO or GND, and CONFIG_VOLTAGE must be set to the correct configuration voltage, in order to determine the I/O voltage support for the pins in bank 0.  It is suggested to specify these either using the 'Edit Device Properties' function in the GUI or directly in the XDC file using the following syntax:
-
- set_property CFGBVS value1 [current_design]
- #where value1 is either VCCO or GND
-
- set_property CONFIG_VOLTAGE value2 [current_design]
- #where value2 is the voltage provided to configuration bank 0
-
-Refer to the device configuration user guide for more information.
-INFO: [Vivado 12-3199] DRC finished with 0 Errors, 1 Warnings
-INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
-INFO: [Designutils 20-2272] Running write_bitstream with 8 threads.
-Loading data files...
-Loading site data...
-Loading route data...
-Processing options...
-Creating bitmap...
-Creating bitstream...
-Writing bitstream ./tx_top.bit...
-INFO: [Vivado 12-1842] Bitgen Completed Successfully.
-INFO: [Project 1-1876] WebTalk data collection is mandatory when using a ULT device. To see the specific WebTalk data collected for your design, open the usage_statistics_webtalk.html or usage_statistics_webtalk.xml file in the implementation directory.
-INFO: [Common 17-83] Releasing license: Implementation
-22 Infos, 1 Warnings, 0 Critical Warnings and 0 Errors encountered.
-write_bitstream completed successfully
-write_bitstream: Time (s): cpu = 00:00:08 ; elapsed = 00:00:10 . Memory (MB): peak = 3329.402 ; gain = 358.324 ; free physical = 787 ; free virtual = 5290
-INFO: [Common 17-206] Exiting Vivado at Thu Sep 29 11:51:18 2022...
