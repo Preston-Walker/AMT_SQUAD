@@ -245,7 +245,7 @@ def plot_window(sm, samples, peak, num_plots=3):
 
 def main():
     sm = FSSM()
-    samples = genfromtxt("../data/9_Aug_Wired.csv", dtype=complex).flatten()
+    samples = genfromtxt("../data/data_a_sep29.csv", dtype=complex).flatten()
     # samples = genfromtxt("../MATLAB/data_a_aug25.csv", dtype=complex).flatten() 
     last_state = st.init
     count = 0

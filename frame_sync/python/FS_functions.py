@@ -25,5 +25,5 @@ def L0_single(data):
     return result
 
 def L6_single(data):
-    result = power(abs(dot(data[0 : 128], preamble_template[0 : 128])),2) + power(abs(dot(data[128 : 256], preamble_template[128 : 256])),2)
+    result = power(abs(dot(data[0 : 128], best_preamble_template[0 : 128])),2) + power(abs(dot(data[128 : 256], preamble_template[128 : 256])),2)
     return result
