@@ -80,12 +80,13 @@ class FSSM:
                 self.llast_mhat = self.last_mhat
                 self.last_mhat = tmp_idx
                 self.mhats = append(self.mhats, self.last_mhat)
-            elif abs(tmp_idx - (self.last_weird + frame_size)) <= 1:
-                self.state = st.twoPeaks
-                self.llast_mhat = self.last_weird
-                self.last_mhat = tmp_idx
-                self.mhats = append(self.mhats, self.last_mhat)
-                self.mhats = append(self.mhats, self.llast_mhat)
+            # TODO: what does this do? Why is it causing errors all of a sudden?
+            # elif abs(tmp_idx - (self.last_weird + frame_size)) <= 1:
+            #     self.state = st.twoPeaks
+            #     self.llast_mhat = self.last_weird
+            #     self.last_mhat = tmp_idx
+            #     self.mhats = append(self.mhats, self.last_mhat)
+            #     self.mhats = append(self.mhats, self.llast_mhat)
             else:
                 self.state = st.weird                                       
                 self.weird = self.current_idx - buffer_size + max_idx
@@ -245,8 +246,8 @@ def plot_window(sm, samples, peak, num_plots=3):
 
 def main():
     sm = FSSM()
-    samples = genfromtxt("../data/data_a_sep29.csv", dtype=complex).flatten()
-    # samples = genfromtxt("../MATLAB/data_a_aug25.csv", dtype=complex).flatten() 
+    # samples = genfromtxt("../data/data_a_sep29.csv", dtype=complex).flatten()
+    samples = genfromtxt("../data/data_a_aug25.csv", dtype=complex).flatten() 
     last_state = st.init
     count = 0
     last_mhat = None
