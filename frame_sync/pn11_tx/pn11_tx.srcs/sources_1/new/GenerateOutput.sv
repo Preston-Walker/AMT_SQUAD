@@ -36,7 +36,7 @@ module GenerateOutput(
     logic[11:0] counter3200;
 
     PN11 pn11_mod(.clk(clk), .enable(enablePn11), .clr(clr), .out_bit(pn11Out));
-    Preamble preamble_mod(.clk(clk), .start(startPreamble), .finished(preambleFinished), .out_bit(preambleOut));
+    BestPreamble preamble_mod(.clk(clk), .start(startPreamble), .finished(preambleFinished), .out_bit(preambleOut));
 
 
     typedef enum logic[1:0] {idle, preamble, pn11, ERR='X}StateType;

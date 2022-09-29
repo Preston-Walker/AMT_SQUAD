@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2022.1 (lin64) Build 3526262 Mon Apr 18 15:47:01 MDT 2022
-| Date             : Thu Jul 21 15:07:38 2022
+| Date             : Thu Sep 29 11:50:37 2022
 | Host             : CB428-EE10977 running 64-bit Ubuntu 20.04.4 LTS
 | Command          : report_power -file tx_top_power_routed.rpt -pb tx_top_power_summary_routed.pb -rpx tx_top_power_routed.rpx
 | Design           : tx_top
@@ -53,12 +53,13 @@ Table of Contents
 | On-Chip        | Power (W) | Used     | Available | Utilization (%) |
 +----------------+-----------+----------+-----------+-----------------+
 | Clocks         |    <0.001 |        8 |       --- |             --- |
-| Slice Logic    |    <0.001 |       78 |       --- |             --- |
-|   LUT as Logic |    <0.001 |       23 |     20800 |            0.11 |
+| Slice Logic    |    <0.001 |       82 |       --- |             --- |
+|   LUT as Logic |    <0.001 |       26 |     20800 |            0.13 |
 |   Register     |    <0.001 |       35 |     41600 |            0.08 |
 |   CARRY4       |    <0.001 |        3 |      8150 |            0.04 |
+|   F7/F8 Muxes  |    <0.001 |        1 |     32600 |           <0.01 |
 |   Others       |     0.000 |        8 |       --- |             --- |
-| Signals        |    <0.001 |       49 |       --- |             --- |
+| Signals        |    <0.001 |       53 |       --- |             --- |
 | MMCM           |     0.122 |        1 |         5 |           20.00 |
 | I/O            |     0.003 |        7 |       106 |            6.60 |
 | Static Power   |     0.072 |          |           |                 |

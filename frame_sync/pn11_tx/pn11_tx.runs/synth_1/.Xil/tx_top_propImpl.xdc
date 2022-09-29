@@ -1,4 +1,4 @@
-set_property SRC_FILE_INFO {cfile:/home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.ip_user_files/constraints.xdc rfile:../../../pn11_tx.ip_user_files/constraints.xdc id:1} [current_design]
+set_property SRC_FILE_INFO {cfile:/home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.ip_user_files/constraints.xdc rfile:../../../pn11_tx.ip_user_files/constraints.xdc id:1} [current_design]
 set_property src_info {type:XDC file:1 line:8 export:INPUT save:INPUT read:READ} [current_design]
 set_property PACKAGE_PIN W5 [get_ports CLK100MHZ]
 set_property src_info {type:XDC file:1 line:48 export:INPUT save:INPUT read:READ} [current_design]

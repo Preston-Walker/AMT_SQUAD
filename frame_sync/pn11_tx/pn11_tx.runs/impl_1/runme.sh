@@ -20,7 +20,7 @@ else
 fi
 export LD_LIBRARY_PATH
 
-HD_PWD='/home/plwalker/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.runs/impl_1'
+HD_PWD='/home/plwalker/Preston-Walker_AMT_SQUAD/AMT_SQUAD/frame_sync/pn11_tx/pn11_tx.runs/impl_1'
 cd "$HD_PWD"
 
 HD_LOG=runme.log
@@ -37,7 +37,7 @@ EAStep()
 }
 
 # pre-commands:
-/bin/touch .init_design.begin.rst
+/bin/touch .write_bitstream.begin.rst
 EAStep vivado -log tx_top.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source tx_top.tcl -notrace
 
 
