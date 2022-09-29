@@ -16,7 +16,7 @@ st = Enum(
 
 
 class FSSM:
-    def __init__(self, corr="L6_single"):
+    def __init__(self, corr="L0_single"):
         self.state = st.init
         self.corr_data = zeros(256)
         self.current_idx = -1
