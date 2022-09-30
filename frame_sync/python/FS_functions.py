@@ -20,10 +20,19 @@ def L0_temp(data):
     return result
 
 # A version of L0 that only returns one correlated sample at a time
-def L0_single(data):
+def L0_single_inet(data):
     result = abs(dot(data[0 : 256], preamble_template))
     return result
-
-def L6_single(data):
-    result = power(abs(dot(data[0 : 128], best_preamble_template[0 : 128])),2) + power(abs(dot(data[128 : 256], preamble_template[128 : 256])),2)
+    
+def L0_single_mdr(data):
+    result = abs(dot(data[0 : 256], best_preamble_template))
     return result
+    
+def L6_single_inet(data):
+    result = power(abs(dot(data[0 : 128], preamble_template[0 : 128])),2) + power(abs(dot(data[128 : 256], preamble_template[128 : 256])),2)
+    return result
+
+def L6_single_mdr(data):
+    result = power(abs(dot(data[0 : 128], best_preamble_template[0 : 128])),2) + power(abs(dot(data[128 : 256], best_preamble_template[128 : 256])),2)
+    return result
+

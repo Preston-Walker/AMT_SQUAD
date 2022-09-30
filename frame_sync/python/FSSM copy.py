@@ -16,7 +16,7 @@ st = Enum(
 
 
 class FSSM:
-    def __init__(self, corr="L0_single"):
+    def __init__(self, corr):
         self.state = st.init
         self.corr_data = zeros(256)
         self.current_idx = -1
@@ -31,10 +31,14 @@ class FSSM:
         self.lock_pairs = array([[]])
         self.lock_begin = None
         self.lock_end = None
-        if corr == "L0_single":
-            self.corr = L0_single
-        elif corr == "L6_single":
-            self.corr = L6_single
+        if corr == "L0_single_mdr":
+            self.corr = L0_single_mdr
+        elif corr == "L0_single_inet":
+            self.corr = L0_single_inet
+        elif corr == "L6_single_mdr":
+            self.corr = L6_single_mdr
+        elif corr == "L6_single_inet":
+            self.corr = L6_single_inet
         else:
             print("Unsupported correlation function")
 
@@ -81,12 +85,12 @@ class FSSM:
                 self.last_mhat = tmp_idx
                 self.mhats = append(self.mhats, self.last_mhat)
             # TODO: what does this do? Why is it causing errors all of a sudden?
-            # elif abs(tmp_idx - (self.last_weird + frame_size)) <= 1:
-            #     self.state = st.twoPeaks
-            #     self.llast_mhat = self.last_weird
-            #     self.last_mhat = tmp_idx
-            #     self.mhats = append(self.mhats, self.last_mhat)
-            #     self.mhats = append(self.mhats, self.llast_mhat)
+            elif self.weird != None and abs(tmp_idx - (self.last_weird + frame_size)) <= 1:
+                self.state = st.twoPeaks
+                self.llast_mhat = self.last_weird
+                self.last_mhat = tmp_idx
+                self.mhats = append(self.mhats, self.last_mhat)
+                self.mhats = append(self.mhats, self.llast_mhat)
             else:
                 self.state = st.weird                                       
                 self.weird = self.current_idx - buffer_size + max_idx
@@ -195,14 +199,25 @@ class FSSM:
         else:
             print("Error state")
 
-def plot_window(sm, samples, peak, num_plots=3):
+def plot_window(sm, samples, peak, corr, num_plots=3):
+
+    if corr == "L0_single_mdr":
+        correlate = L0_single_mdr
+    elif corr == "L0_single_inet":
+        correlate = L0_single_inet
+    elif corr == "L6_single_mdr":
+        correlate = L6_single_mdr
+    elif corr == "L6_single_inet":
+        correlate = L6_single_inet
+    else:
+        print("Unsupported correlation function")
 
     # plot the surrounding pointd of the peak (256 samples on either side)
     data_to_correlate = samples[peak-256:peak+513]
     possible_preamble = zeros(513)
     x = range(512)
     for index in x:
-        possible_preamble[index] = L0_single(data_to_correlate[index:index+256])
+        possible_preamble[index] = correlate(data_to_correlate[index:index+256])
     x = x + peak - 257
     max_y = max(possible_preamble)
     max_x = argmax(possible_preamble) + peak - 257
@@ -245,9 +260,10 @@ def plot_window(sm, samples, peak, num_plots=3):
     show()  
 
 def main():
-    sm = FSSM()
-    # samples = genfromtxt("../data/data_a_sep29.csv", dtype=complex).flatten()
-    samples = genfromtxt("../data/data_a_aug25.csv", dtype=complex).flatten() 
+    correlation_func = "L6_single_mdr"
+    sm = FSSM(corr=correlation_func)
+    samples = genfromtxt("../data/data_a_sep30.csv", dtype=complex).flatten()
+    # samples = genfromtxt("../data/data_a_aug25.csv", dtype=complex).flatten() 
     last_state = st.init
     count = 0
     last_mhat = None
@@ -272,13 +288,13 @@ def main():
         if sm.last_mhat != last_mhat:
             last_mhat = sm.last_mhat
             print(f"last_mhat: {last_mhat}")
-            plot_window(sm, samples, last_mhat)
+            plot_window(sm, samples, last_mhat, correlation_func)
 
         if sm.weird != weird:
             weird = sm.weird
             if weird is not None:
                 print(f"weird: {weird}")
-                plot_window(sm, samples, weird)
+                plot_window(sm, samples, weird, correlation_func)
 
                 
 

@@ -1,0 +1,24 @@
+9/30 
+updated:
+- created separate functions for the correlation functions for the different preambles
+- made it so that only one spot in main has to updated to update which correlation function is being used
+
+problems:
+- L0 and L6 correlations don't match
+    ~ for the new preamble the correlation functions don't match up at all (except 39902 and 5870)
+- the graphs don't match
+    ~ the top graph and middle graph rarely ever match up and often look completely different
+
+L0 Peaks:               L6 Peaks:
+1520 - onepeak          5870 - onepeak
+5870 - weird            10220 - weird
+9964 - onepeak          16619 - onepeak
+14314 - weird           18664 - weird
+20713 - onepeak         25063 - onepeak
+27108 - weird           31458 - weird
+33247 - onepeak         37597 - onepeak
+39902 - twopeaks        39902 - weird
+44252 - weird           41951 - onepeak
+48346 - onepeak         48346 - weird
+52696 - weird           54485 - onepeak
+                        
