@@ -85,7 +85,7 @@ class FSSM:
                 self.last_mhat = tmp_idx
                 self.mhats = append(self.mhats, self.last_mhat)
             # TODO: what does this do? Why is it causing errors all of a sudden?
-            elif self.weird != None and abs(tmp_idx - (self.last_weird + frame_size)) <= 1:
+            elif self.last_weird and abs(tmp_idx - (self.last_weird + frame_size)) <= 1:
                 self.state = st.twoPeaks
                 self.llast_mhat = self.last_weird
                 self.last_mhat = tmp_idx
@@ -93,7 +93,7 @@ class FSSM:
                 self.mhats = append(self.mhats, self.llast_mhat)
             else:
                 self.state = st.weird                                       
-                self.weird = self.current_idx - buffer_size + max_idx
+                self.weird = tmp_idx
         elif self.state == st.twoPeaks:
             avg_val, max_idx, max_val = self.get_peak()
             tmp_idx = self.current_idx - buffer_size + max_idx
@@ -247,7 +247,7 @@ def plot_window(sm, samples, peak, corr, num_plots=3):
             #     for i in range(shape(sm.lock_pairs)[0]):
             #         axs[2].axvspan(sm.lock_pairs[i][0], sm.lock_pairs[i][1], color='yellow', alpha=.2)
             for num in complete_idx:
-                if num % 6656 == 4504:
+                if num % 6656 == sm.mhats[0]:
                     is_mhat = False
                     for mhat in sm.mhats:
                         if (abs(mhat - num) <= 2):
