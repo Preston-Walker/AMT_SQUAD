@@ -8,6 +8,13 @@ problems:
     ~ for the new preamble the correlation functions don't match up at all (except 39902 and 5870)
 - the graphs don't match
     ~ the top graph and middle graph rarely ever match up and often look completely different
+        > 16619
+        > 25063
+        > 37597
+        > 41951
+        > 54485
+        > Graphs are off in all 1 peak states but the first
+    ~ the one peak graphs for inet functions are wrong too, we just never noticed
 
 L0 Peaks:               L6 Peaks:
 1520 - onepeak          5870 - onepeak

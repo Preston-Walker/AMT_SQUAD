@@ -263,7 +263,7 @@ def main():
     correlation_func = "L6_single_mdr"
     sm = FSSM(corr=correlation_func)
     samples = genfromtxt("../data/data_a_sep30.csv", dtype=complex).flatten()
-    # samples = genfromtxt("../data/data_a_aug25.csv", dtype=complex).flatten() 
+    # samples = genfromtxt("../data/9_Aug_Wired.csv", dtype=complex).flatten() 
     last_state = st.init
     count = 0
     last_mhat = None
