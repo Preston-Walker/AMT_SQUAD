@@ -1,6 +1,6 @@
 Vivado Simulator v2022.1
 Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
-Running: /tools/Xilinx/Vivado/2022.1/bin/unwrapped/lnx64.o/xelab --debug typical --relax --mt 8 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot GenerateOutput_behav xil_defaultlib.GenerateOutput xil_defaultlib.glbl -log elaborate.log 
+Running: /tools/Xilinx/Vivado/2022.1/bin/unwrapped/lnx64.o/xelab --debug typical --relax --mt 8 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot tx_top_behav xil_defaultlib.tx_top xil_defaultlib.glbl -log elaborate.log 
 Using 8 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
@@ -11,5 +11,11 @@ Time Resolution for simulation is 1ps
 Compiling module xil_defaultlib.PN11
 Compiling module xil_defaultlib.BestPreamble
 Compiling module xil_defaultlib.GenerateOutput
+Compiling module unisims_ver.IBUF
+Compiling module unisims_ver.MMCME2_ADV(CLKFBOUT_MULT_F=50.37...
+Compiling module unisims_ver.BUFG
+Compiling module xil_defaultlib.clk_wiz_1_clk_wiz
+Compiling module xil_defaultlib.clk_wiz_1
+Compiling module xil_defaultlib.tx_top
 Compiling module xil_defaultlib.glbl
-Built simulation snapshot GenerateOutput_behav
+Built simulation snapshot tx_top_behav

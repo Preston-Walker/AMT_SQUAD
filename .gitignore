@@ -7,4 +7,5 @@ __pycache__/
 *.slx*
 *slprj*
 *.pdf
-.vscode/
+.vscode0/
+*:Zone.Identifier
