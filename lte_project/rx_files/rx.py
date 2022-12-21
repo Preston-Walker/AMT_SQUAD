@@ -12,11 +12,12 @@ sys.path.insert(0, path)
 import uhd
 
 
-usrp = uhd.usrp.MultiUSRP('IPAddress=192.168.0.165')
-samples = usrp.recv_num_samps(num_samps=12000000, freq=3700e6, rate=48e6, channels=[0], gain=10) # units: N, Hz, Hz, list of channel IDs, dB
-# samples = usrp.recv_num_samps(fc=3700e6, duration=1, sample_rate=24e6, channels=[0], gain=1)
+usrp = uhd.usrp.MultiUSRP(f'IPAddress={IP_radio}')
+# Note: num_samps = rate * 0.001 seconds for 1 ms of output
+samples = usrp.recv_num_samps(num_samps=61440, freq=3700e6, rate=61.44e6, channels=[0], gain=10) # units: N, Hz, Hz, list of channel IDs, dB
 
-print(samples)
+with open("rx_data", "wb") as out_file:
+    samples.tofile(out_file)
 
 
 
